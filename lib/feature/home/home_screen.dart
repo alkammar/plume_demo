@@ -9,6 +9,7 @@ import 'package:plume_demo/widget/internet_speed.dart';
 import 'package:plume_demo/widget/motion.dart';
 import 'package:plume_demo/widget/nodes.dart';
 import 'package:plume_demo/widget/people.dart';
+import 'package:plume_demo/widget/timeout.dart';
 
 const cellWidthScale = 0.385;
 
@@ -141,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       const Pair(1, 4): Motion(),
       const Pair(0, 4): People(),
       const Pair(1, 5): Nodes(),
+      const Pair(2, 4): Timeout(),
     };
 
     for (int i = -1; i < 5; i++) {
