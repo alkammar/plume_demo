@@ -5,6 +5,7 @@ import 'package:plume_demo/feature/component/clickable_background.dart';
 import 'package:plume_demo/feature/home/home_bloc.dart';
 import 'package:plume_demo/widget/devices.dart';
 import 'package:plume_demo/widget/empty.dart';
+import 'package:plume_demo/widget/events.dart';
 import 'package:plume_demo/widget/internet_speed.dart';
 import 'package:plume_demo/widget/motion.dart';
 import 'package:plume_demo/widget/nodes.dart';
@@ -143,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       const Pair(0, 4): People(),
       const Pair(1, 5): Nodes(),
       const Pair(2, 4): Timeout(),
+      const Pair(2, 3): Events(),
     };
 
     for (int i = -1; i < 5; i++) {
