@@ -6,6 +6,12 @@ import 'package:morkam/draw/drawable_widget.dart';
 class Hexagon extends DrawableWidget {
   final Paint _paint = Paint()..color = Colors.white;
 
+  final Color _color;
+
+  Hexagon([this._color = Colors.white]) {
+    _paint.color = _color;
+  }
+
   @override
   void paint(Size size, Orientation orientation, Canvas canvas, BuildContext context) {
     final center = Offset(size.width / 2, size.height / 2);
