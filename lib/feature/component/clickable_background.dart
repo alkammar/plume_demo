@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/component.dart';
-import 'package:plume_demo/feature/hexagon/pulse_hexagon.dart';
+import 'package:plume_demo/feature/component/pulse_hexagon.dart';
 import 'package:plume_demo/feature/home/home_screen.dart';
 
 enum Components {

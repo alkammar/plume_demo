@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/component.dart';
-import 'package:plume_demo/feature/hexagon/hexagon.dart';
+import 'package:plume_demo/feature/component/hexagon.dart';
 
 enum Components {
   hexagon,

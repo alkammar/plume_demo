@@ -1,41 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/component.dart';
-import 'package:plume_demo/feature/hexagon/hexagon.dart';
+import 'package:plume_demo/feature/component/hexagon.dart';
+import 'package:plume_demo/feature/component/waves.dart';
 
 enum Components {
   hexagon,
+  waves,
   icon,
   count,
   label,
 }
 
-class Devices extends StatefulComponent {
+class Motion extends StatefulComponent {
   @override
   State<StatefulWidget> createState() => _DevicesState();
 }
 
-class _DevicesState extends ComponentState<Devices> with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+class _DevicesState extends ComponentState<Motion> with TickerProviderStateMixin {
+  late AnimationController _tickAnimationController;
+  late Animation<double> _tickAnimation;
+  late AnimationController _levelAnimationController;
+  late Animation<double> _levelAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
+    _tickAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 500),
     );
 
-    _animation = Tween(
+    _tickAnimation = Tween(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
       curve: Curves.linear,
-      parent: _animationController,
+      parent: _tickAnimationController,
     ));
 
-    _animationController.forward();
+    _levelAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    );
+
+    _levelAnimation = Tween(
+      begin: 0.0,
+      end: 0.7,
+    ).animate(CurvedAnimation(
+      curve: Curves.easeOut,
+      parent: _levelAnimationController,
+    ));
+
+    _tickAnimationController.forward();
+    _tickAnimationController.repeat();
+
+    _levelAnimationController.forward();
   }
 
   @override
@@ -44,40 +64,47 @@ class _DevicesState extends ComponentState<Devices> with TickerProviderStateMixi
       id: Components.hexagon,
       child: AnimatedBuilder(
         builder: (BuildContext context, Widget? _) => Hexagon(),
-        animation: _animation,
+        animation: _tickAnimation,
+      ),
+    ),
+    LayoutId(
+      id: Components.waves,
+      child: AnimatedBuilder(
+        builder: (BuildContext context, Widget? _) => Waves(_tickAnimation.value, _levelAnimation.value),
+        animation: _tickAnimation,
       ),
     ),
     LayoutId(
       id: Components.icon,
       child: AnimatedBuilder(
         builder: (BuildContext context, Widget? _) => const Icon(
-          Icons.phone_android_sharp,
+          Icons.sensors_sharp,
           color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
           size: 24,
         ),
-        animation: _animation,
+        animation: _tickAnimation,
       ),
     ),
     LayoutId(
       id: Components.count,
       child: AnimatedBuilder(
-        builder: (BuildContext context, Widget? _) => Text(
-          (17 * _animation.value).toStringAsFixed(0),
+        builder: (BuildContext context, Widget? _) => const Text(
+          '',
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
             fontWeight: FontWeight.bold,
             fontSize: 48,
           ),
         ),
-        animation: _animation,
+        animation: _tickAnimation,
       ),
     ),
     LayoutId(
       id: Components.label,
       child: AnimatedBuilder(
         builder: (BuildContext context, Widget? _) => const Text(
-          'active',
+          'TV',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
@@ -85,20 +112,21 @@ class _DevicesState extends ComponentState<Devices> with TickerProviderStateMixi
             fontSize: 18,
           ),
         ),
-        animation: _animation,
+        animation: _tickAnimation,
       ),
     ),
   ];
 
   @override
   void performLayout(Size size, Orientation orientation, MultiChildLayoutDelegate layoutDelegate) {
-    _layoutCable(layoutDelegate, size);
+    _layoutHexagon(layoutDelegate, size);
+    _layoutWaves(layoutDelegate, size);
     _layoutIcon(layoutDelegate, size);
     _layoutCount(layoutDelegate, size);
     _layoutLabel(layoutDelegate, size);
   }
 
-  _layoutCable(MultiChildLayoutDelegate layoutDelegate, Size size) {
+  _layoutHexagon(MultiChildLayoutDelegate layoutDelegate, Size size) {
     layoutDelegate.layoutChild(
       Components.hexagon,
       BoxConstraints(
@@ -109,6 +137,21 @@ class _DevicesState extends ComponentState<Devices> with TickerProviderStateMixi
 
     layoutDelegate.positionChild(
       Components.hexagon,
+      Offset.zero,
+    );
+  }
+
+  _layoutWaves(MultiChildLayoutDelegate layoutDelegate, Size size) {
+    layoutDelegate.layoutChild(
+      Components.waves,
+      BoxConstraints(
+        maxWidth: size.width,
+        maxHeight: size.height,
+      ),
+    );
+
+    layoutDelegate.positionChild(
+      Components.waves,
       Offset.zero,
     );
   }

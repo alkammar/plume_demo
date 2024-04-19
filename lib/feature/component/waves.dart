@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/drawable_widget.dart';
-import 'package:plume_demo/feature/hexagon/hexagon.dart';
+import 'package:plume_demo/feature/component/hexagon.dart';
 
 class Waves extends DrawableWidget {
 

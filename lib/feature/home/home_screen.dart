@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plume_demo/feature/hexagon/clickable_background.dart';
-import 'package:plume_demo/feature/hexagon/devices_cell.dart';
-import 'package:plume_demo/feature/hexagon/empty_cell.dart';
-import 'package:plume_demo/feature/hexagon/internet_speed_cell.dart';
-import 'package:plume_demo/feature/hexagon/motion_cell.dart';
+import 'package:plume_demo/feature/component/clickable_background.dart';
 import 'package:plume_demo/feature/home/home_bloc.dart';
+import 'package:plume_demo/widget/devices.dart';
+import 'package:plume_demo/widget/empty.dart';
+import 'package:plume_demo/widget/internet_speed.dart';
+import 'package:plume_demo/widget/motion.dart';
+import 'package:plume_demo/widget/people.dart';
 
 const cellWidthScale = 0.385;
 
@@ -137,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       const Pair(1, 3): InternetSpeed(),
       const Pair(0, 3): Devices(),
       const Pair(1, 4): Motion(),
+      const Pair(0, 4): People(),
     };
 
     for (int i = -1; i < 5; i++) {
