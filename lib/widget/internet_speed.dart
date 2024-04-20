@@ -76,8 +76,9 @@ class _InternetSpeedState extends ComponentState<InternetSpeed> with TickerProvi
                     fontSize: 24,
                   ),
                 ),
+                const SizedBox(width: 4),
                 const Text(
-                  'mbps',
+                  'Mbps',
                   style: TextStyle(
                     color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
                     fontWeight: FontWeight.bold,
@@ -107,8 +108,9 @@ class _InternetSpeedState extends ComponentState<InternetSpeed> with TickerProvi
                     fontSize: 24,
                   ),
                 ),
+                const SizedBox(width: 4),
                 const Text(
-                  'mbps',
+                  'Mbps',
                   style: TextStyle(
                     color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
                     fontWeight: FontWeight.bold,

@@ -138,13 +138,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     final double size = MediaQuery.of(context).size.width * cellWidthScale;
 
     final cells = {
-      const Pair(1, 3): InternetSpeed(),
-      const Pair(0, 3): Devices(),
-      const Pair(1, 4): Motion(),
-      const Pair(0, 4): People(),
-      const Pair(1, 5): Nodes(),
-      const Pair(2, 4): Timeout(),
-      const Pair(2, 3): Events(),
+      const Pair(1, 2): InternetSpeed(),
+      const Pair(0, 2): Devices(),
+      const Pair(1, 3): Motion(),
+      const Pair(0, 3): People(),
+      const Pair(1, 4): Nodes(),
+      const Pair(2, 3): Timeout(),
+      const Pair(2, 2): Events(),
     };
 
     for (int i = -1; i < 5; i++) {

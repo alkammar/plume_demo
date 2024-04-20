@@ -12,7 +12,7 @@ class Empty extends Component {
   List<Widget> addComponents(BuildContext context, Orientation orientation) => [
     LayoutId(
       id: Components.hexagon,
-      child: Hexagon(),
+      child: Hexagon(const Color.fromARGB(0xFF, 0xDD, 0xDD, 0xDD)),
     ),
   ];
 
