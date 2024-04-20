@@ -59,9 +59,7 @@ class _NodesState extends ComponentState<Nodes> with TickerProviderStateMixin {
         LayoutId(
           id: '${Components.node}_$i',
           child: AnimatedBuilder(
-            builder: (BuildContext context, Widget? _) => Hexagon(
-              i == 30 ? Colors.red : Colors.purple
-            ),
+            builder: (BuildContext context, Widget? _) => Hexagon(i == 30 ? Colors.red : Colors.purple),
             animation: _animation,
           ),
         ),
@@ -114,8 +112,8 @@ class _NodesState extends ComponentState<Nodes> with TickerProviderStateMixin {
         offset += Offset(
             widgetSize.width * 2 * cos(30.rad() + 30.rad() * i), widgetSize.height * 2 * sin(30.rad() + 30.rad() * i));
       } else if (i >= 7 && i <= 30 && i % 2 == 1) {
-        offset += Offset(
-            widgetSize.width * 1.75 * cos(30.rad() + 30.rad() * i), widgetSize.height * 1.75 * sin(30.rad() + 30.rad() * i));
+        offset += Offset(widgetSize.width * 1.75 * cos(30.rad() + 30.rad() * i),
+            widgetSize.height * 1.75 * sin(30.rad() + 30.rad() * i));
       }
       layoutDelegate.positionChild(
         '${Components.node}_$i',
@@ -125,6 +123,17 @@ class _NodesState extends ComponentState<Nodes> with TickerProviderStateMixin {
             ) +
             offset,
       );
+    }
+
+    for (int i = _animation.value.toInt(); i < _nodeCount; i++) {
+      layoutDelegate.layoutChild(
+        '${Components.node}_$i',
+        const BoxConstraints(
+          maxWidth: 0,
+          maxHeight: 0,
+        ),
+      );
+      layoutDelegate.positionChild('${Components.node}_$i', Offset.zero);
     }
   }
 }

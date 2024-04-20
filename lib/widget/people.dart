@@ -25,10 +25,10 @@ class _PeopleState extends ComponentState<People> with TickerProviderStateMixin 
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  late ui.Image? _dad;
-  late ui.Image? _mom;
-  late ui.Image? _son;
-  late ui.Image? _daughter;
+  ui.Image? _dad;
+  ui.Image? _mom;
+  ui.Image? _son;
+  ui.Image? _daughter;
 
   @override
   void initState() {
@@ -105,14 +105,14 @@ class _PeopleState extends ComponentState<People> with TickerProviderStateMixin 
     LayoutId(
       id: Components.person3,
       child: AnimatedBuilder(
-        builder: (BuildContext context, Widget? _) => _dad == null ? const SizedBox.shrink() : Sector(2, _son!),
+        builder: (BuildContext context, Widget? _) => _son == null ? const SizedBox.shrink() : Sector(2, _son!),
         animation: _animation,
       ),
     ),
     LayoutId(
       id: Components.person4,
       child: AnimatedBuilder(
-        builder: (BuildContext context, Widget? _) => _dad == null ? const SizedBox.shrink() : Sector(3, _daughter!),
+        builder: (BuildContext context, Widget? _) => _daughter == null ? const SizedBox.shrink() : Sector(3, _daughter!),
         animation: _animation,
       ),
     ),
