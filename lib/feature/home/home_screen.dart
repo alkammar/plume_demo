@@ -7,6 +7,7 @@ import 'package:plume_demo/widget/devices.dart';
 import 'package:plume_demo/widget/empty.dart';
 import 'package:plume_demo/widget/events.dart';
 import 'package:plume_demo/widget/internet_speed.dart';
+import 'package:plume_demo/widget/logo.dart';
 import 'package:plume_demo/widget/motion.dart';
 import 'package:plume_demo/widget/nodes.dart';
 import 'package:plume_demo/widget/people.dart';
@@ -96,12 +97,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   ] +
                   honeyCombFill() +
                   [
+                    // Positioned(
+                    //   top: MediaQuery.of(context).size.width * cellWidthScale * 0.92 - 80,
+                    //   child: ImageIcon(
+                    //     const AssetImage('assets/images/logo.png'),
+                    //     color: Colors.blue,
+                    //     size: MediaQuery.of(context).size.width * cellWidthScale * 2,
+                    //   ),
+                    // ),
                     Positioned(
                       top: MediaQuery.of(context).size.width * cellWidthScale * 0.92 - 80,
-                      child: ImageIcon(
-                        const AssetImage('assets/images/logo.png'),
-                        color: Colors.blue,
-                        size: MediaQuery.of(context).size.width * cellWidthScale,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * cellWidthScale,
+                        height: MediaQuery.of(context).size.width * cellWidthScale,
+                        child: Logo(),
                       ),
                     ),
                     const Positioned(
@@ -138,11 +147,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     final double size = MediaQuery.of(context).size.width * cellWidthScale;
 
     final cells = {
-      const Pair(1, 2): InternetSpeed(),
-      const Pair(0, 2): Devices(),
+      // const Pair(0, 1): Logo(),
+      const Pair(0, 2): InternetSpeed(),
+      const Pair(1, 4): Devices(),
       const Pair(1, 3): Motion(),
-      const Pair(0, 3): People(),
-      const Pair(1, 4): Nodes(),
+      const Pair(1, 2): People(),
+      const Pair(0, 3): Nodes(),
       const Pair(2, 3): Timeout(),
       const Pair(2, 2): Events(),
     };
@@ -151,24 +161,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       for (int j = 2; j < 10; j++) {
         final k = i % 2 == 0 ? 0 : -1;
         list.add(
-          Positioned(
-            left: i * size * 0.8,
-            top: j * size * 0.92 + k * size * 0.46 - 80,
-            child: SizedBox(
-              width: size,
-              height: size,
-              child: GestureDetector(
-                child: cells[Pair(i, j)] ?? Empty(),
-                onTap: () {
-                  _clickedPosition = Pair(
-                    i * size * 0.8 + size * 0.5,
-                    j * size * 0.92 + k * size * 0.46 - 80 + size * 0.5,
-                  );
-                  _clickAnimationController.forward().then((value) => _clickAnimationController.reverse());
-                },
-              ),
-            ),
-          ),
+          AnimatedBuilder(
+              animation: _clickAnimation,
+              builder: (context, child) {
+                final clickPosition = Pair(
+                  i * size * 0.8 + size * 0.5,
+                  j * size * 0.92 + k * size * 0.46 - 80 + size * 0.5,
+                );
+                const clickDepth = 0.03;
+                final clickScale = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
+                    ? ((1.0 - _clickAnimation.value) * clickDepth + (1.0 - clickDepth))
+                    : 1.0;
+                final clickShift = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
+                    ? clickDepth * _clickAnimation.value / 2
+                    : 0.0;
+                return Positioned(
+                  left: i * size * 0.8 + size * clickShift,
+                  top: j * size * 0.92 + k * size * 0.46 - 80 + size * clickShift,
+                  child: SizedBox(
+                    width: size * clickScale,
+                    height: size * clickScale,
+                    child: GestureDetector(
+                      child: cells[Pair(i, j)] ?? Empty(),
+                      onTap: () {
+                        _clickedPosition = clickPosition;
+                        _clickAnimationController.forward().then((value) => _clickAnimationController.reverse());
+                      },
+                    ),
+                  ),
+                );
+              }),
         );
       }
     }

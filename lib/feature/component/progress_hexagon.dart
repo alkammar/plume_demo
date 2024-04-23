@@ -50,6 +50,11 @@ class ProgressHexagon extends DrawableWidget {
     canvas.drawCircle(Offset(size.width * 0.45 * cos(-63.rad()), size.width * 0.45 * sin(-59.5.rad())) + center, 5, _paint..color = _color..style = PaintingStyle.fill);
     canvas.drawCircle(Offset(size.width * 0.45 * cos(92.rad()), size.width * 0.45 * sin(60.rad())) + center, 5, _paint..color = _color..style = PaintingStyle.fill);
   }
+
+  @override
+  List<Object> repaintTriggers(BuildContext context) {
+    return [_color];
+  }
 }
 
 Path hexagonPath({required double side, required double cornerRadius}) {
