@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/drawable_widget.dart';
 import 'package:plume_demo/feature/component/hexagon.dart';
+import 'package:plume_demo/feature/component/hexagon_circumference.dart';
 
 class LogoSwirl extends DrawableWidget {
   final Paint _paint = Paint()
@@ -29,98 +30,33 @@ class LogoSwirl extends DrawableWidget {
     final innerSideOffset = Offset(sideDiff * cos(60.rad()), -sideDiff * sin(60.rad()));
     final cornerRadius = innerSide * 0.3;
 
+
     canvas.save();
     canvas.translate(center.dx, center.dy);
+    canvas.rotate(_rotation.rad());
 
     canvas.save();
 
-    canvas.rotate(_rotation.rad());
-
     for (int i = 0; i < 6; i++) {
-
       canvas.save();
 
       canvas.rotate((-60 * i).rad());
+      canvas.translate(innerSideOffset.dx, innerSideOffset.dy);
 
-      _drawLine(outerSide, innerSide, cornerRadius, innerSideOffset, canvas, size, _progress);
+      Path clipPath = Path();
+
+      // canvas.drawRect(Rect.fromCenter(center: Offset(size.width * -0.07, size.width * -0.04), width: size.width * 0.47, height: size.width * 0.43), _paint..color = _paint.color.withAlpha(0xFF));
+      clipPath.addRect(Rect.fromCenter(center: Offset(size.width * -0.07, size.width * -0.04), width: size.width * 0.47, height: size.width * 0.43));
+
+      canvas.clipPath(clipPath);
+
+      drawHexagonCircumference(size * 0.6, canvas, _paint..color = _paint.color.withAlpha(0xFF), 0.50 * _progress, true);
 
       canvas.restore();
     }
 
     canvas.restore();
-
     canvas.restore();
-  }
-
-  void _drawLine(double outerSide, double innerSide, double cornerRadius, Offset innerSideOffset, Canvas canvas, Size size, double progress) {
-
-    Offset p1 = Offset(innerSide * cos(-60.rad()), innerSide * sin(-60.rad())) + innerSideOffset;
-    Offset p2 = Offset(innerSide * cos(-120.rad()), innerSide * sin(-120.rad())) + innerSideOffset;
-    Offset p3 = Offset(innerSide * cos(-180.rad()), innerSide * sin(-180.rad())) + innerSideOffset;
-    Offset p4 = Offset(innerSide * cos(-240.rad()), innerSide * sin(-240.rad())) + innerSideOffset;
-
-    Path path = Path();
-    
-    final cornerCircleDistanceFromVertex = cornerRadius / cos(30.rad());
-
-    path.moveTo(p1.dx, p1.dy);
-
-    //----------------------------------------------------------------------------------------
-
-    var prg = (min(0.33, progress) - 0.0) / 0.33;
-    var hexagonAngle = -120;
-    var lineAngle = 0;
-    _lineSegment(path, p1, p2, cornerRadius, lineAngle, cornerCircleDistanceFromVertex, hexagonAngle, prg);
-
-    //----------------------------------------------------------------------------------------
-
-    if (progress > 0.33) {
-      prg = (min(0.67, progress) - 0.33) / 0.33;
-      hexagonAngle = -180;
-      lineAngle = -60;
-      _lineSegment(path, p2 + Offset(cornerCircleDistanceFromVertex * cos(120.rad()), cornerCircleDistanceFromVertex * sin(120.rad())), p3, cornerRadius, lineAngle, cornerCircleDistanceFromVertex, hexagonAngle, prg);
-    }
-
-    //----------------------------------------------------------------------------------------
-
-    if (progress > 0.67) {
-      hexagonAngle = -240;
-      lineAngle = -120;
-      _lineSegment(path, p3 + Offset(cornerCircleDistanceFromVertex * cos(60.rad()), cornerCircleDistanceFromVertex * sin(60.rad())), p4, cornerRadius, lineAngle, cornerCircleDistanceFromVertex, hexagonAngle, (max(min(1.0, progress), 0.67) - 0.67) / 0.33);
-      path.lineTo(p4.dx + cornerRadius * cos(lineAngle.rad()), p4.dy + cornerRadius * sin(lineAngle.rad()));
-    }
-
-    //----------------------------------------------------------------------------------------
-
-    Path clipPath = Path();
-
-    clipPath.addRect(Rect.fromCenter(center: Offset(size.width * -0.02, size.width * -0.11), width: size.width * 0.37, height: size.width * 0.37));
-
-    canvas.clipPath(clipPath);
-
-    canvas.drawPath(path, _paint);
-  }
-
-  void _lineSegment(Path path, Offset p1, Offset p2, double cornerRadius, int lineAngle, double cornerCircleDistanceFromVertex, int hexagonAngle, double progress) {
-    final diff = p2 - p1;
-    final p12 = p1 + diff * min(1.0, progress / 0.7);
-
-    path.lineTo(p12.dx + cornerRadius * cos(lineAngle.rad()), p12.dy + cornerRadius * sin(lineAngle.rad()));
-
-    final cornerCircleCenter = p2 -
-        Offset(
-          cornerCircleDistanceFromVertex * cos(hexagonAngle.rad()),
-          cornerCircleDistanceFromVertex * sin(hexagonAngle.rad()),
-        );
-
-    if (progress > 0.7) {
-      path.arcTo(
-        Rect.fromCenter(center: cornerCircleCenter, width: cornerRadius * 2, height: cornerRadius * 2),
-        hexagonAngle.rad() + 30.rad(),
-        -60.rad() * (progress - 0.7) / 0.3,
-        false,
-      );
-    }
   }
 
   @override

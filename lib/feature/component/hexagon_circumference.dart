@@ -19,59 +19,69 @@ class HexagonCircumference extends DrawableWidget {
 
   @override
   void paint(Size size, Orientation orientation, Canvas canvas, BuildContext context) {
-    _paint.strokeWidth = size.width * 0.05;
-
-    final center = Offset(size.width / 2, size.height / 2);
-    final side = size.width * 0.45;
-    final cornerRadius = side * 0.3;
-
-    path.reset();
-
     canvas.save();
-    canvas.translate(center.dx, center.dy);
+    canvas.translate(size.width / 2, size.height / 2);
 
-    final List<Vertex> vertices = [];
-
-    for (int i = 1; i <= 6; i++) {
-      vertices.add(Vertex(angle: (-60 * i).rad(), side: side, cornerRadius: cornerRadius));
-    }
-
-    final double sidesProgress = _progress * 6;
-    final int sidesCount = sidesProgress.toInt();
-    for (int i = 0; i < sidesCount; i++) {
-      final vertex = vertices[i];
-      final nextVertex = vertices[(i + 1) % 6];
-
-      path.arcTo(vertex.cornerRect, vertex.arcStart, vertex.arcSweep, false);
-      path.lineTo(nextVertex.arcRightPoint.dx, nextVertex.arcRightPoint.dy);
-    }
-
-    if (sidesCount < 6) {
-      final int sideIndex = sidesProgress ~/ 1;
-      final double sideProgress = sidesProgress % 1;
-
-      final vertex = vertices[sideIndex];
-      final nextVertex = vertices[(sideIndex + 1) % 6];
-
-      final arcProgress = max(0.0, min(0.3, sideProgress - 0.0)) / 0.3;
-      final lineProgress = max(0.0, min(0.7, sideProgress - 0.3)) / 0.7;
-
-      path.arcTo(vertex.cornerRect, vertex.arcStart, vertex.arcSweep * arcProgress, false);
-
-      Offset diff = (nextVertex.arcRightPoint - vertex.arcLeftPoint) * lineProgress;
-
-      path.relativeLineTo(diff.dx, diff.dy);
-    }
-
-    // path.close();
-
-    canvas.drawPath(path, _paint);
+    drawHexagonCircumference(size, canvas, _paint, _progress, false);
 
     canvas.restore();
   }
 
   @override
   List<Object> repaintTriggers(BuildContext context) => [_progress, _color];
+}
+
+void drawHexagonCircumference(Size size, Canvas canvas, Paint paint, double progress, bool zeroRadiusStart) {
+  Path path = Path();
+
+  paint.strokeWidth = size.width * 0.05;
+
+  const center = Offset.zero;
+  final side = size.width * 0.45;
+  final cornerRadius = side * 0.3;
+
+  path.reset();
+
+  canvas.save();
+  canvas.translate(center.dx, center.dy);
+
+  final List<Vertex> vertices = [];
+
+  for (int i = 1; i <= 6; i++) {
+    double radius = zeroRadiusStart && i == 1 ? 0 : cornerRadius;
+    vertices.add(Vertex(angle: (-60 * i).rad(), side: side, cornerRadius: radius));
+  }
+
+  final double sidesProgress = progress * 6;
+  final int sidesCount = sidesProgress.toInt();
+  for (int i = 0; i < sidesCount; i++) {
+    final vertex = vertices[i];
+    final nextVertex = vertices[(i + 1) % 6];
+
+    path.arcTo(vertex.cornerRect, vertex.arcStart, vertex.arcSweep, false);
+    path.lineTo(nextVertex.arcRightPoint.dx, nextVertex.arcRightPoint.dy);
+  }
+
+  if (sidesCount < 6) {
+    final int sideIndex = sidesProgress ~/ 1;
+    final double sideProgress = sidesProgress % 1;
+
+    final vertex = vertices[sideIndex];
+    final nextVertex = vertices[(sideIndex + 1) % 6];
+
+    final arcProgress = max(0.0, min(0.3, sideProgress - 0.0)) / 0.3;
+    final lineProgress = max(0.0, min(0.7, sideProgress - 0.3)) / 0.7;
+
+    path.arcTo(vertex.cornerRect, vertex.arcStart, vertex.arcSweep * arcProgress, false);
+
+    Offset diff = (nextVertex.arcRightPoint - vertex.arcLeftPoint) * lineProgress;
+
+    path.relativeLineTo(diff.dx, diff.dy);
+  }
+
+  canvas.drawPath(path, paint);
+
+  canvas.restore();
 }
 
 class Vertex {
