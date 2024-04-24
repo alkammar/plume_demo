@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:morkam/draw/component.dart';
 import 'package:plume_demo/feature/component/hexagon.dart';
+import 'package:plume_demo/feature/component/hexagon_circumference.dart';
 import 'package:plume_demo/feature/component/progress_hexagon.dart';
 
 enum Components {
@@ -26,7 +27,7 @@ class _TimeoutState extends ComponentState<Timeout> with TickerProviderStateMixi
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _animation = Tween(
@@ -64,7 +65,7 @@ class _TimeoutState extends ComponentState<Timeout> with TickerProviderStateMixi
       id: Components.count,
       child: AnimatedBuilder(
         builder: (BuildContext context, Widget? _) => Text(
-          (10 * _animation.value).toStringAsFixed(0),
+          10.toStringAsFixed(0),
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Color.fromARGB(0xFF, 0x33, 0x33, 0x33),
@@ -93,7 +94,7 @@ class _TimeoutState extends ComponentState<Timeout> with TickerProviderStateMixi
     LayoutId(
       id: Components.progress,
       child: AnimatedBuilder(
-        builder: (BuildContext context, Widget? _) => ProgressHexagon(Colors.blueAccent),
+        builder: (BuildContext context, Widget? _) => HexagonCircumference(_animation.value * 0.6, Colors.blueAccent),
         animation: _animation,
       ),
     ),

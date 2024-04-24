@@ -11,10 +11,18 @@ class ProgressHexagon extends DrawableWidget {
     ..strokeJoin = StrokeJoin.round
     ..color = Colors.white;
 
+  final Paint _paint2 = Paint()
+    ..style = PaintingStyle.fill
+    ..strokeWidth = 10
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round
+    ..color = Colors.white;
+
   final Color _color;
 
   ProgressHexagon([this._color = Colors.white]) {
     _paint.color = _color;
+    _paint2.color = _color;
   }
 
   @override
@@ -26,7 +34,7 @@ class ProgressHexagon extends DrawableWidget {
         side: size.width * 0.45,
         cornerRadius: size.width * 0.1,
       ).shift(center),
-      _paint,
+      _paint..color = _color..strokeWidth = 10,
     );
 
     canvas.drawLine(
@@ -47,13 +55,13 @@ class ProgressHexagon extends DrawableWidget {
       _paint..color = Colors.white,
     );
 
-    canvas.drawCircle(Offset(size.width * 0.45 * cos(-63.rad()), size.width * 0.45 * sin(-59.5.rad())) + center, 5, _paint..color = _color..style = PaintingStyle.fill);
-    canvas.drawCircle(Offset(size.width * 0.45 * cos(92.rad()), size.width * 0.45 * sin(60.rad())) + center, 5, _paint..color = _color..style = PaintingStyle.fill);
+    canvas.drawCircle(Offset(size.width * 0.45 * cos(-63.rad()), size.width * 0.45 * sin(-59.5.rad())) + center, 5, _paint2);
+    canvas.drawCircle(Offset(size.width * 0.45 * cos(92.rad()), size.width * 0.45 * sin(60.rad())) + center, 5, _paint2);
   }
 
   @override
   List<Object> repaintTriggers(BuildContext context) {
-    return [_color];
+    return [_color, _paint.color, _paint, _paint.style];
   }
 }
 
