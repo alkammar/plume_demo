@@ -52,10 +52,12 @@ class _DevicesState extends ComponentState<Motion> with TickerProviderStateMixin
       parent: _levelAnimationController,
     ));
 
-    _tickAnimationController.forward();
-    _tickAnimationController.repeat();
+    Future.delayed(const Duration(seconds: 2)).then((value) {
+      _tickAnimationController.forward();
+      _tickAnimationController.repeat();
 
-    _levelAnimationController.forward();
+      _levelAnimationController.forward();
+    });
   }
 
   @override

@@ -28,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   late AnimationController _clickAnimationController;
   late Animation<double> _clickAnimation;
 
+  late AnimationController _entranceAnimationController;
+  late Animation<double> _entranceAnimation;
+
   @override
   initState() {
     super.initState();
@@ -46,6 +49,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       curve: Curves.easeOutCubic,
       parent: _clickAnimationController,
     ));
+
+    _entranceAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+
+    _entranceAnimation = Tween(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      curve: Curves.easeOutCubic,
+      parent: _entranceAnimationController,
+    ));
+
+    _entranceAnimationController.forward();
   }
 
   @override
@@ -162,35 +180,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
         final k = i % 2 == 0 ? 0 : -1;
         list.add(
           AnimatedBuilder(
-              animation: _clickAnimation,
-              builder: (context, child) {
-                final clickPosition = Pair(
-                  i * size * 0.8 + size * 0.5,
-                  j * size * 0.92 + k * size * 0.46 - 80 + size * 0.5,
-                );
-                const clickDepth = 0.03;
-                final clickScale = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
-                    ? ((1.0 - _clickAnimation.value) * clickDepth + (1.0 - clickDepth))
-                    : 1.0;
-                final clickShift = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
-                    ? clickDepth * _clickAnimation.value / 2
-                    : 0.0;
-                return Positioned(
-                  left: i * size * 0.8 + size * clickShift,
-                  top: j * size * 0.92 + k * size * 0.46 - 80 + size * clickShift,
-                  child: SizedBox(
-                    width: size * clickScale,
-                    height: size * clickScale,
-                    child: GestureDetector(
-                      child: cells[Pair(i, j)] ?? Empty(),
-                      onTap: () {
-                        _clickedPosition = clickPosition;
-                        _clickAnimationController.forward().then((value) => _clickAnimationController.reverse());
-                      },
-                    ),
-                  ),
-                );
-              }),
+            animation: _entranceAnimation,
+            builder: (context, child) => AnimatedBuilder(
+                  animation: _clickAnimation,
+                  builder: (context, child) {
+                    final clickPosition = Pair(
+                      i * size * 0.8 + size * 0.5,
+                      j * size * 0.92 + k * size * 0.46 - 80 + size * 0.5,
+                    );
+                    const clickDepth = 0.03;
+                    final clickScale = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
+                        ? ((1.0 - _clickAnimation.value) * clickDepth + (1.0 - clickDepth))
+                        : 1.0;
+                    final clickShift = _clickedPosition?.a == clickPosition.a && _clickedPosition?.b == clickPosition.b
+                        ? clickDepth * _clickAnimation.value / 2
+                        : 0.0;
+                    return Positioned(
+                      left: i * size * 0.8 + size * clickShift,
+                      top: j * size * 0.92 + k * size * 0.46 - 80 + size * clickShift + _entranceAnimation.value * (MediaQuery.of(context).size.height * 7 * (0.5 + j / 20.0 + (i - 1).abs() / 50.0)),
+                      child: SizedBox(
+                        width: size * clickScale,
+                        height: size * clickScale,
+                        child: GestureDetector(
+                          child: cells[Pair(i, j)] ?? Empty(),
+                          onTap: () {
+                            _clickedPosition = clickPosition;
+                            _clickAnimationController.forward().then((value) => _clickAnimationController.reverse());
+                          },
+                        ),
+                      ),
+                    );
+                  })
+          ),
         );
       }
     }

@@ -35,7 +35,7 @@ class _DevicesState extends ComponentState<Devices> with TickerProviderStateMixi
       parent: _animationController,
     ));
 
-    _animationController.forward();
+    Future.delayed(const Duration(seconds: 2)).then((value) => _animationController.forward());
   }
 
   @override

@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:morkam/draw/component.dart';
 import 'package:plume_demo/feature/component/hexagon.dart';
 import 'package:plume_demo/feature/component/sector.dart';
-import 'dart:ui' as ui;
 
 enum Components {
   hexagon,
@@ -36,7 +36,7 @@ class _PeopleState extends ComponentState<People> with TickerProviderStateMixin 
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _animation = Tween(
@@ -47,16 +47,20 @@ class _PeopleState extends ComponentState<People> with TickerProviderStateMixin 
       parent: _animationController,
     ));
 
-    _animationController.forward();
-
-    setState(() {
-
+    Future.delayed(const Duration(seconds: 2)).then((value) {
+      Future.delayed(const Duration(milliseconds: 250)).then((_) {
+        loadUiImage('assets/images/man.png').then((value) => setState(() => _dad = value));
+        Future.delayed(const Duration(milliseconds: 250)).then((_) {
+          loadUiImage('assets/images/woman.png').then((value) => setState(() => _mom = value));
+          Future.delayed(const Duration(milliseconds: 250)).then((_) {
+            loadUiImage('assets/images/boy.png').then((value) => setState(() => _son = value));
+            Future.delayed(const Duration(milliseconds: 250)).then((_) {
+              loadUiImage('assets/images/girl.png').then((value) => setState(() => _daughter = value));
+            });
+          });
+        });
+      });
     });
-
-    loadUiImage('assets/images/man.png').then((value) => setState(() => _dad = value));
-    loadUiImage('assets/images/woman.png').then((value) => setState(() => _mom = value));
-    loadUiImage('assets/images/boy.png').then((value) => setState(() => _son = value));
-    loadUiImage('assets/images/girl.png').then((value) => setState(() => _daughter = value));
   }
 
   Future<ui.Image> loadUiImage(String imageAssetPath) async {

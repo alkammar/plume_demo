@@ -35,7 +35,7 @@ class _InternetSpeedState extends ComponentState<InternetSpeed> with TickerProvi
       parent: _animationController,
     ));
 
-    _animationController.forward();
+    Future.delayed(const Duration(seconds: 2)).then((value) => _animationController.forward());
   }
 
   @override

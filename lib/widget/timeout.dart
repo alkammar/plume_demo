@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:morkam/draw/component.dart';
 import 'package:plume_demo/feature/component/hexagon.dart';
 import 'package:plume_demo/feature/component/hexagon_circumference.dart';
-import 'package:plume_demo/feature/component/progress_hexagon.dart';
 
 enum Components {
   hexagon,
@@ -34,11 +33,11 @@ class _TimeoutState extends ComponentState<Timeout> with TickerProviderStateMixi
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      curve: Curves.linear,
+      curve: Curves.bounceOut,
       parent: _animationController,
     ));
 
-    _animationController.forward();
+    Future.delayed(const Duration(seconds: 2)).then((value) => _animationController.forward());
   }
 
   @override
